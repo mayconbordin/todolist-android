@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    private static final int EDIT_TASK_REQUEST = 1;
 
     private ListView listView;
     private Button btnAddTask;
     private EditText edtTaskTitle;
+    private TaskAdapter adapter;
+    private List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,21 +37,27 @@ public class MainActivity extends AppCompatActivity {
         btnAddTask = (Button) findViewById(R.id.btnAddTask);
         edtTaskTitle = (EditText) findViewById(R.id.edtTaskTitle);
 
-        List<Task> tasks = new ArrayList<>();
+        tasks = new ArrayList<>();
         tasks.add(new Task("Tarefa 1"));
         tasks.add(new Task("Tarefa 2"));
         tasks.add(new Task("Tarefa 3"));
         tasks.add(new Task("Tarefa 4"));
 
-        final TaskAdapter adapter = new TaskAdapter(this, tasks);
+        adapter = new TaskAdapter(this, tasks);
 
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String itemValue = (String) listView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "You clicked on item " + itemValue, Toast.LENGTH_LONG).show();
+                Task task = (Task) listView.getItemAtPosition(position);
+
+                Log.i(TAG, "Task: " + task.getTitle());
+
+                Intent intent = new Intent(MainActivity.this, TaskActivity.class);
+                intent.putExtra(TaskActivity.TASK_TITLE, task.getTitle());
+                intent.putExtra(TaskActivity.TASK_POS, position);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -86,5 +97,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_TASK_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String title = data.getStringExtra(TaskActivity.TASK_TITLE);
+                int pos = data.getIntExtra(TaskActivity.TASK_POS, -1);
+
+                if (pos != -1) {
+                    tasks.get(pos).setTitle(title);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 }
