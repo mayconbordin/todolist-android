@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +20,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
+    private Button btnAddTask;
+    private EditText edtTaskTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.listView);
+        btnAddTask = (Button) findViewById(R.id.btnAddTask);
+        edtTaskTitle = (EditText) findViewById(R.id.edtTaskTitle);
 
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task("Tarefa 1"));
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         tasks.add(new Task("Tarefa 3"));
         tasks.add(new Task("Tarefa 4"));
 
-        TaskAdapter adapter = new TaskAdapter(this, tasks);
+        final TaskAdapter adapter = new TaskAdapter(this, tasks);
 
         listView.setAdapter(adapter);
 
@@ -41,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String itemValue = (String) listView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "You clicked on item " + itemValue, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = edtTaskTitle.getText().toString();
+                adapter.add(new Task(title));
+                adapter.notifyDataSetChanged();
             }
         });
     }
