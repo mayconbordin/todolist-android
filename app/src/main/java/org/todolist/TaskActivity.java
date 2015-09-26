@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,11 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class TaskActivity extends AppCompatActivity {
-    public static final String TASK_TITLE = "taskTitle";
-    public static final String TASK_POS = "taskPos";
+    public static final String TASK_ID = "taskId";
 
     private EditText edtTaskTitle;
     private Button btnSaveTask;
+    private DBHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,16 +26,20 @@ public class TaskActivity extends AppCompatActivity {
         edtTaskTitle = (EditText) findViewById(R.id.edtTaskTitle);
         btnSaveTask  = (Button) findViewById(R.id.btnSaveTask);
 
-        final Intent intent = getIntent();
-        String title = intent.getStringExtra(TASK_TITLE);
+        mDbHelper = new DBHelper(this);
 
-        setTitle(title);
-        edtTaskTitle.setText(title);
+        final Intent intent = getIntent();
+        long id = intent.getLongExtra(TASK_ID, -1);
+        final Task task = mDbHelper.getTask(id);
+
+        setTitle(task.getTitle());
+        edtTaskTitle.setText(task.getTitle());
 
         btnSaveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent.putExtra(TASK_TITLE, edtTaskTitle.getText().toString());
+                String newTitle = edtTaskTitle.getText().toString();
+                mDbHelper.updateTask(task.getId(), newTitle);
 
                 if (getParent() == null) {
                     setResult(Activity.RESULT_OK, intent);

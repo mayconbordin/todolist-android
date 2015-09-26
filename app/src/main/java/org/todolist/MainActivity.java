@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edtTaskTitle;
     private TaskAdapter adapter;
     private List<Task> tasks;
+    private DBHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +38,10 @@ public class MainActivity extends AppCompatActivity {
         btnAddTask = (Button) findViewById(R.id.btnAddTask);
         edtTaskTitle = (EditText) findViewById(R.id.edtTaskTitle);
 
-        tasks = new ArrayList<>();
-        tasks.add(new Task("Tarefa 1"));
-        tasks.add(new Task("Tarefa 2"));
-        tasks.add(new Task("Tarefa 3"));
-        tasks.add(new Task("Tarefa 4"));
+        mDbHelper = new DBHelper(this);
+        tasks = mDbHelper.getAllTasks();
 
         adapter = new TaskAdapter(this, tasks);
-
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Task: " + task.getTitle());
 
                 Intent intent = new Intent(MainActivity.this, TaskActivity.class);
-                intent.putExtra(TaskActivity.TASK_TITLE, task.getTitle());
-                intent.putExtra(TaskActivity.TASK_POS, position);
+                intent.putExtra(TaskActivity.TASK_ID, task.getId());
                 startActivityForResult(intent, 1);
             }
         });
@@ -65,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String title = edtTaskTitle.getText().toString();
-                adapter.add(new Task(title));
+                Task task = mDbHelper.insertTask(title);
+
+                adapter.add(task);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -103,13 +101,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDIT_TASK_REQUEST) {
             if (resultCode == RESULT_OK) {
-                String title = data.getStringExtra(TaskActivity.TASK_TITLE);
-                int pos = data.getIntExtra(TaskActivity.TASK_POS, -1);
-
-                if (pos != -1) {
-                    tasks.get(pos).setTitle(title);
-                    adapter.notifyDataSetChanged();
-                }
+                tasks.clear();
+                tasks.addAll(mDbHelper.getAllTasks());
+                adapter.notifyDataSetChanged();
             }
         }
     }

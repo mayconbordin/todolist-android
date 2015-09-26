@@ -11,8 +11,12 @@ import android.widget.TextView;
 import java.util.List;
 
 public class TaskAdapter extends ArrayAdapter<Task> {
+    private DBHelper mDbHelper;
+
     public TaskAdapter(Context context, List<Task> objects) {
         super(context, R.layout.list_row, objects);
+
+        mDbHelper = new DBHelper(context);
     }
 
     @Override
@@ -37,6 +41,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
                 @Override
                 public void onClick(View v) {
                     remove(item);
+                    mDbHelper.deleteTask(item.getId());
                     notifyDataSetChanged();
                 }
             });
