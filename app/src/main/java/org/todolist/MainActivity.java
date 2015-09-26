@@ -12,13 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
-
-    private String[] listItems = new String[] {
-            "Tarefa 1", "Tarefa 2", "Tarefa 3", "Tarefa 4"
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_row, R.id.rowTextView, listItems);
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task("Tarefa 1"));
+        tasks.add(new Task("Tarefa 2"));
+        tasks.add(new Task("Tarefa 3"));
+        tasks.add(new Task("Tarefa 4"));
+
+        TaskAdapter adapter = new TaskAdapter(this, tasks);
 
         listView.setAdapter(adapter);
 
