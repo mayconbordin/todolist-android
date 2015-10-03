@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -16,7 +17,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =  "DROP TABLE IF EXISTS tasks";
 
     private static final String[] SQL_CREATE_ENTRIES = new String[] {
-        "CREATE TABLE tasks (id INTEGER PRIMARY KEY autoincrement, title TEXT NOT NULL); "
+        "CREATE TABLE tasks (" +
+                "id INTEGER PRIMARY KEY autoincrement, " +
+                "title TEXT NOT NULL, " +
+                "date INTEGER" +
+        "); "
     };
 
     public DBHelper(Context context) {
@@ -36,19 +41,38 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public Task insertTask(String title) {
+    public Task insertTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
-        contentValues.put("title", title);
+        contentValues.put("title", task.getTitle());
+
+        if (task.getDate() != null) {
+            contentValues.put("date", task.getDate().getTime());
+        } else {
+            contentValues.putNull("date");
+        }
+
         long newRowId = db.insert("tasks", null, contentValues);
-        return new Task(newRowId, title);
+        task.setId(newRowId);
+
+        return task;
     }
 
-    public boolean updateTask(long id, String title) {
+    public boolean updateTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
-        contentValues.put("title", title);
-        db.update("tasks", contentValues, "id = ? ", new String[]{Long.toString(id)});
+        contentValues.put("title", task.getTitle());
+
+        if (task.getDate() != null) {
+            contentValues.put("date", task.getDate().getTime());
+        } else {
+            contentValues.putNull("date");
+        }
+
+        db.update("tasks", contentValues, "id = ? ", new String[]{Long.toString(task.getId())});
+
         return true;
     }
 
@@ -56,7 +80,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from tasks where id="+id+"", null);
         res.moveToFirst();
-        return new Task(res.getLong(0), res.getString(1));
+
+        Task task = new Task();
+        task.setId(res.getLong(0));
+        task.setTitle(res.getString(1));
+        task.setDate(res.isNull(2) ? null : new Date(res.getLong(2)));
+
+        return task;
     }
 
     public List<Task> getAllTasks() {

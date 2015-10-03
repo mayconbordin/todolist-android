@@ -60,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
         btnAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = edtTaskTitle.getText().toString();
-                Task task = mDbHelper.insertTask(title);
+                Task task = new Task();
+                task.setTitle(edtTaskTitle.getText().toString());
+                mDbHelper.insertTask(task);
 
                 adapter.add(task);
                 adapter.notifyDataSetChanged();

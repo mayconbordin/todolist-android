@@ -11,17 +11,69 @@
         android:layout_height="wrap_content"
         android:id="@+id/edtTaskTitle"
         android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/labelTaskName"
+        android:layout_toEndOf="@+id/labelTaskName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:id="@+id/labelTaskName"
+        android:paddingRight="15dp"
+        android:gravity="center_vertical|start"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/btnSaveTask"
-        android:layout_toStartOf="@+id/btnSaveTask" />
+        android:layout_alignTop="@+id/edtTaskTitle"
+        android:layout_alignBottom="@+id/edtTaskTitle"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prazo:"
+        android:id="@+id/labelTaskDate"
+        android:gravity="center_vertical|start"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/edtTaskTitle"
+        android:layout_toStartOf="@+id/edtTaskTitle"
+        android:layout_toLeftOf="@+id/edtTaskTitle"
+        android:layout_alignBottom="@+id/txtTaskDate" />
+
+    <TextView
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|start"
+        android:id="@+id/txtTaskDate"
+        android:layout_below="@+id/edtTaskTitle"
+        android:layout_alignLeft="@+id/edtTaskTitle"
+        android:layout_alignStart="@+id/edtTaskTitle"
+        android:clickable="true"
+        android:text="click to set date"
+        />
+
+    <TextView
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|start"
+        android:id="@+id/txtTaskTime"
+        android:text="click to set time"
+        android:layout_below="@+id/edtTaskTitle"
+        android:layout_toRightOf="@+id/txtTaskDate"
+        android:layout_toEndOf="@+id/txtTaskDate"
+        android:clickable="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/btnSaveTask"
-        android:layout_alignBottom="@+id/edtTaskTitle"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/edtTaskTitle"
+        android:layout_alignEnd="@+id/edtTaskTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
