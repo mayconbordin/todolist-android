@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+
+        PollReceiver.scheduleAlarms(this);
     }
 
     @Override

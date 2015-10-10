@@ -78,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Task getTask(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from tasks where id="+id+"", null);
+        Cursor res = db.rawQuery("select * from tasks where id=" + id + "", null);
         res.moveToFirst();
 
         Task task = new Task();
@@ -94,6 +94,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from tasks", null);
+        res.moveToFirst();
+
+        while(!res.isAfterLast()) {
+            list.add(new Task(res.getLong(0), res.getString(1)));
+            res.moveToNext();
+        }
+
+        res.close();
+
+        return list;
+    }
+
+    public List<Task> getTasksByDate(long date) {
+        ArrayList<Task> list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from tasks where date > " + date + "", null);
         res.moveToFirst();
 
         while(!res.isAfterLast()) {

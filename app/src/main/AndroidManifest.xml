@@ -20,6 +20,17 @@
             android:name=".TaskActivity"
             android:label="@string/title_activity_task" >
         </activity>
+
+        <service
+            android:name=".CheckTasksService"
+            android:enabled="true" />
+
+        <receiver android:name=".PollReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
