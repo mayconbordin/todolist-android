@@ -106,11 +106,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<Task> getTasksByDate(long date) {
+    public List<Task> getTasksByDate(long start, long end) {
         ArrayList<Task> list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from tasks where date > " + date + "", null);
+        Cursor res = db.rawQuery("select * from tasks where date >= " + start +
+                                 " and date <= " + end + "", null);
         res.moveToFirst();
 
         while(!res.isAfterLast()) {

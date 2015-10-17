@@ -21,8 +21,9 @@ public class CheckTasksService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         mDbHelper = new DBHelper(getApplicationContext());
 
-        long date = System.currentTimeMillis() - (1000 * 60 * 60 * 24); // now - 1 dia
-        List<Task> pendingTasks = mDbHelper.getTasksByDate(date);
+        long start = System.currentTimeMillis();
+        long end   = start + (1000 * 60 * 60 * 24); // now + 1 dia
+        List<Task> pendingTasks = mDbHelper.getTasksByDate(start, end);
 
         Log.i(TAG, "Pending tasks: "+pendingTasks.size());
 
