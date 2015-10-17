@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +57,8 @@ public class DBHelper extends SQLiteOpenHelper {
         long newRowId = db.insert("tasks", null, contentValues);
         task.setId(newRowId);
 
+        db.close();
+
         return task;
     }
 
@@ -72,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         db.update("tasks", contentValues, "id = ? ", new String[]{Long.toString(task.getId())});
+        db.close();
 
         return true;
     }

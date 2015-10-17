@@ -2,6 +2,7 @@ package org.todolist;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private Button btnAddTask;
     private EditText edtTaskTitle;
+    private ProgressBar spinner;
     private TaskAdapter adapter;
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
     private DBHelper mDbHelper;
 
     @Override
@@ -37,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         btnAddTask = (Button) findViewById(R.id.btnAddTask);
         edtTaskTitle = (EditText) findViewById(R.id.edtTaskTitle);
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
 
         mDbHelper = new DBHelper(this);
-        tasks = mDbHelper.getAllTasks();
+        //tasks = mDbHelper.getAllTasks();
 
         adapter = new TaskAdapter(this, tasks);
         listView.setAdapter(adapter);
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         PollReceiver.scheduleAlarms(this);
+
+        new GetTaskList().execute();
     }
 
     @Override
@@ -108,6 +114,23 @@ public class MainActivity extends AppCompatActivity {
                 tasks.addAll(mDbHelper.getAllTasks());
                 adapter.notifyDataSetChanged();
             }
+        }
+    }
+
+    private class GetTaskList extends AsyncTask<Void, Void, List<Task>> {
+        @Override
+        protected List<Task> doInBackground(Void... params) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {}
+            return mDbHelper.getAllTasks();
+        }
+
+        @Override
+        protected void onPostExecute(List<Task> list) {
+            spinner.setVisibility(View.GONE);
+            tasks.addAll(list);
+            adapter.notifyDataSetChanged();
         }
     }
 }
