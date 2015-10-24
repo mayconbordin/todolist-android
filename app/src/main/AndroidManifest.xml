@@ -19,15 +19,26 @@
         <activity
             android:name=".TaskActivity"
             android:label="@string/title_activity_task" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
 
         <service
             android:name=".CheckTasksService"
             android:enabled="true" />
 
-        <receiver android:name=".PollReceiver">
+        <receiver android:name=".PollReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

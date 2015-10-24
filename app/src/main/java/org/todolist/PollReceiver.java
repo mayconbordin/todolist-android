@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.util.Log;
 
 public class PollReceiver extends BroadcastReceiver {
+    public static final String TAG = "PollReceiver";
     private static final int PERIOD        = 1000;//900000; // 15 minutes
     private static final int INITIAL_DELAY = 0;//5000; // 5 seconds
 
@@ -29,5 +31,17 @@ public class PollReceiver extends BroadcastReceiver {
         mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + INITIAL_DELAY,
                 PERIOD, pi);
+
+        Log.i(TAG, "Started periodic background service");
+    }
+
+    public static void cancelAlarms(Context ctxt) {
+        AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
+
+        Intent i = new Intent(ctxt, PollReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(ctxt, 0, i, 0);
+
+        mgr.cancel(pi);
+        Log.i(TAG, "Stopped periodic background service");
     }
 }

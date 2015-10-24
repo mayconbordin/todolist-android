@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,9 @@ public class TaskActivity extends AppCompatActivity
             calendar.setTime(task.getDate());
             calendarToView(Update.ALL);
         }
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         setTitle(task.getTitle());
         edtTaskTitle.setText(task.getTitle());

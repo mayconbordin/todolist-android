@@ -94,13 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_send_message) {
-            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-            sendIntent.setData(Uri.parse("sms:"));
-            sendIntent.putExtra("sms_body", "Just a test");
-            startActivity(sendIntent);
         }
 
         return super.onOptionsItemSelected(item);
