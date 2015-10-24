@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -23,6 +24,13 @@ public class PollReceiver extends BroadcastReceiver {
     }
 
     public static void scheduleAlarms(Context ctxt) {
+        SharedPreferences sharedPreferences = ctxt.getSharedPreferences(Constants.PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
+
+        if (!sharedPreferences.getBoolean(Constants.RUN_BG_SERVICE, true)) {
+            return;
+        }
+
         AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
 
         Intent i = new Intent(ctxt, PollReceiver.class);
